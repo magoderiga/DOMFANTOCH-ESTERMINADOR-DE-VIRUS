@@ -1,0 +1,34 @@
+<!-- Configuracao minima do Sysmon focada em persistencia (skill domfantoch-esterminador-de-virus).
+     Eventos: 1 processo, 6 driver, 11 arquivo em Inicializar/Tasks, 12/13/14 registro de persistencia, 19/20/21 WMI. -->
+<Sysmon schemaversion="4.50">
+  <HashAlgorithms>SHA256</HashAlgorithms>
+  <EventFiltering>
+    <RuleGroup name="processos" groupRelation="or">
+      <ProcessCreate onmatch="exclude" />
+    </RuleGroup>
+    <RuleGroup name="drivers" groupRelation="or">
+      <DriverLoad onmatch="exclude" />
+    </RuleGroup>
+    <RuleGroup name="arquivos-persistencia" groupRelation="or">
+      <FileCreate onmatch="include">
+        <TargetFilename condition="contains">\Start Menu\Programs\Startup\</TargetFilename>
+        <TargetFilename condition="contains">\Windows\System32\Tasks\</TargetFilename>
+      </FileCreate>
+    </RuleGroup>
+    <RuleGroup name="registro-persistencia" groupRelation="or">
+      <RegistryEvent onmatch="include">
+        <TargetObject condition="contains">\CurrentVersion\Run</TargetObject>
+        <TargetObject condition="contains">\Policies\Explorer\Run</TargetObject>
+        <TargetObject condition="contains">\Winlogon\</TargetObject>
+        <TargetObject condition="contains">\Image File Execution Options\</TargetObject>
+        <TargetObject condition="contains">AppInit_DLLs</TargetObject>
+        <TargetObject condition="contains">\Schedule\TaskCache\</TargetObject>
+        <TargetObject condition="contains">\Windows Defender\</TargetObject>
+        <TargetObject condition="begin with">HKLM\System\CurrentControlSet\Services\</TargetObject>
+      </RegistryEvent>
+    </RuleGroup>
+    <RuleGroup name="wmi" groupRelation="or">
+      <WmiEvent onmatch="exclude" />
+    </RuleGroup>
+  </EventFiltering>
+</Sysmon>

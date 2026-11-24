@@ -1,0 +1,8 @@
+# gerados em tempo de execucao: relatorios, backups, quarentena e perfil de teste
+logs/
+_backups/
+_teste/
+protegidos.txt
+__pycache__/
+*.pyc
+*.tmp
